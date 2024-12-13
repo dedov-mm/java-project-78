@@ -34,7 +34,7 @@ public class StringSchemaTest {
         schema.contains("test");
 
         var expected = "test";
-        var actual = schema.getSubstring();
+        var actual = schema.getContainsSubstring();
 
         assertEquals(expected, actual);
     }
