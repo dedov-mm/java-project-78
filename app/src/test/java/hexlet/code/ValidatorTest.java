@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import hexlet.code.schemas.NumberSchema;
 import hexlet.code.schemas.StringSchema;
 import org.junit.jupiter.api.Test;
 
@@ -8,11 +9,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ValidatorTest {
     @Test
-    void testValidator() {
+    void testValidatorString() {
         Validator v = new Validator();
-        StringSchema schema = v.string();
+        StringSchema stringSchema = v.string();
 
-        assertNotNull(schema);
-        assertTrue(schema.isValid(""));
+        assertNotNull(stringSchema);
+        assertTrue(stringSchema.isValid(""));
+    }
+
+    @Test
+    void testValidatorNumber() {
+        Validator v = new Validator();
+        NumberSchema numberSchema = v.number();
+
+        assertNotNull(numberSchema);
+        assertTrue(numberSchema.isValid(0));
     }
 }
