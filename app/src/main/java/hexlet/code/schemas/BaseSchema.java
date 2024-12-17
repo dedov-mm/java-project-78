@@ -12,12 +12,19 @@ public abstract class BaseSchema<T> {
         return required;
     }
 
-    public boolean isValid(T value) {
+    public boolean isValid(Object value) {
         if (value == null) {
             return !required;
         }
-        return validate(value);
+        if (required && !isValidType(value)) {
+            return false;
+        }
+        return validate((T) value);
     }
 
-    abstract boolean validate(T value);
+    protected boolean isValidType(Object value) {
+        return true;
+    }
+
+    protected abstract boolean validate(T value);
 }
