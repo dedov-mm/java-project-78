@@ -36,7 +36,6 @@ public class MapSchema extends BaseSchema<Map<?, ?>> {
             for (Map.Entry<String, BaseSchema<?>> entry : shapeSchemas.entrySet()) {
                 String key = entry.getKey();
                 BaseSchema<?> schema = entry.getValue();
-
                 if (!value.containsKey(key) || !schema.isValid(value.get(key))) {
                     return false;
                 }
