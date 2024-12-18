@@ -3,18 +3,18 @@ package hexlet.code.schemas;
 public abstract class BaseSchema<T> {
     private boolean required = false;
 
-    @SuppressWarnings("checkstyle")
+    @SuppressWarnings("checkstyle:designforextension")
     public BaseSchema<T> required() {
         this.required = true;
         return this;
     }
 
-    @SuppressWarnings("checkstyle")
+    @SuppressWarnings("checkstyle:designforextension")
     protected boolean isRequired() {
         return required;
     }
 
-    @SuppressWarnings("checkstyle")
+    @SuppressWarnings("checkstyle:designforextension")
     public boolean isValid(Object value) {
         if (value == null) {
             return !required;
@@ -25,7 +25,7 @@ public abstract class BaseSchema<T> {
         return validate((T) value);
     }
 
-    @SuppressWarnings("checkstyle")
+    @SuppressWarnings("checkstyle:designforextension")
     protected boolean isValidType(Object value) {
         return true;
     }
