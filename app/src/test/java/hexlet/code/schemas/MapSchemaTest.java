@@ -38,7 +38,6 @@ public class MapSchemaTest {
         Validator v = new Validator();
         MapSchema schema = v.map();
 
-        
         Map<String, BaseSchema<?>> schemas = new HashMap<>();
         schemas.put("firstName", v.string().required());
         schemas.put("lastName", v.string().required().minLength(2));
