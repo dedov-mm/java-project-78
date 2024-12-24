@@ -2,7 +2,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
-    application
+    java
     jacoco
     id("checkstyle")
 }
