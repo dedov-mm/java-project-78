@@ -1,48 +1,46 @@
 package hexlet.code.schemas;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Predicate;
+
 public abstract class BaseSchema<T> {
-    private boolean required = false;
+    protected final Map<String, Predicate<T>> checks = new LinkedHashMap<>();
+    protected boolean required = false;
 
     /**
-     * Marks this schema as required.
-     * @return the updated schema
+     * Adds a new check to the schema.
+     *
+     * @param name     the name of the check (used as an identifier)
+     * @param validate the predicate that represents the validation logic
+     */
+    protected final void addCheck(String name, Predicate<T> validate) {
+        checks.put(name, validate);
+    }
+
+    /**
+     * Marks the schema as required.
+     *
+     * @return the schema itself for method chaining
      */
     public BaseSchema<T> required() {
         this.required = true;
+        addCheck("required", value -> value != null);
         return this;
     }
 
     /**
-     * Indicates whether the schema is marked as required.
-     * @return true if the schema is required
-     */
-    protected boolean isRequired() {
-        return required;
-    }
-
-    /**
-     * Checks if the given value satisfies the schema's constraints.
+     * Validates the given value against all defined checks.
+     *
      * @param value the value to validate
-     * @return true if the value is valid according to the schema
+     * @return true if all checks pass, false otherwise
      */
-    public boolean isValid(Object value) {
-        if (value == null) {
-            return !required;
+    public boolean isValid(T value) {
+        for (Map.Entry<String, Predicate<T>> entry : checks.entrySet()) {
+            if (!entry.getValue().test(value)) {
+                return false;
+            }
         }
-        if (required && !isValidType(value)) {
-            return false;
-        }
-        return validate((T) value);
-    }
-
-    /**
-     * Checks if the given value is of a valid type for this schema.
-     * @param value the value to check
-     * @return true if the value is of a valid type
-     */
-    protected boolean isValidType(Object value) {
         return true;
     }
-
-    protected abstract boolean validate(T value);
 }

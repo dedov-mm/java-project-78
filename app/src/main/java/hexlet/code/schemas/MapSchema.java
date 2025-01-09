@@ -1,48 +1,54 @@
 package hexlet.code.schemas;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public final class MapSchema extends BaseSchema<Map<?, ?>> {
-    private Integer requiredSize = null;
-    private Map<String, BaseSchema<?>> shapeSchemas = null;
+public final class MapSchema extends BaseSchema<Map<String, Object>> {
+    private int requiredSize = -1;
 
-    @Override
     public MapSchema required() {
         super.required();
         return this;
     }
 
-    public MapSchema sizeof(int size) {
+    public MapSchema sizeOf(int size) {
         this.requiredSize = size;
+        addCheck("sizeOf", value -> value == null || value.size() == size);
         return this;
     }
 
-    public MapSchema shape(Map<String, ? extends BaseSchema<?>> schemas) {
-        this.shapeSchemas = new HashMap<>(schemas);
-        return this;
-    }
+    public MapSchema shape(Map<String, BaseSchema<?>> schemas) {
+        addCheck("shape", map -> {
+            if (map == null) {
+                return false;
+            }
 
-    @Override
-    protected boolean isValidType(Object value) {
-        return value instanceof Map;
-    }
-
-    @Override
-    protected boolean validate(Map<?, ?> value) {
-        if (requiredSize != null && value.size() != requiredSize) {
-            return false;
-        }
-        if (shapeSchemas != null) {
-            for (Map.Entry<String, BaseSchema<?>> entry : shapeSchemas.entrySet()) {
+            for (Map.Entry<String, BaseSchema<?>> entry : schemas.entrySet()) {
                 String key = entry.getKey();
                 BaseSchema<?> schema = entry.getValue();
-                if (!value.containsKey(key) || !schema.isValid(value.get(key))) {
+                Object value = map.get(key);
+
+                if (value == null || !map.containsKey(key) || !isValidWithSchema(schema, value)) {
                     return false;
                 }
             }
-        }
+            return true;
+        });
+        return this;
+    }
 
-        return true;
+    @SuppressWarnings("unchecked")
+    private <T> boolean isValidWithSchema(BaseSchema<T> schema, Object value) {
+        if (value == null) {
+            return true;
+        }
+        try {
+            return schema.isValid((T) value);
+        } catch (ClassCastException e) {
+            return false;
+        }
+    }
+
+    public int getRequiredSize() {
+        return requiredSize;
     }
 }
