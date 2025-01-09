@@ -3,16 +3,13 @@ package hexlet.code.schemas;
 import java.util.Map;
 
 public final class MapSchema extends BaseSchema<Map<String, Object>> {
-    private int requiredSize = -1;
-
     public MapSchema required() {
-        super.required();
+        addCheck("required", value -> value != null && value instanceof Map);
         return this;
     }
 
     public MapSchema sizeOf(int size) {
-        this.requiredSize = size;
-        addCheck("sizeOf", value -> value == null || value.size() == size);
+        addCheck("sizeOf", value -> value != null && value.size() == size);
         return this;
     }
 
@@ -27,7 +24,7 @@ public final class MapSchema extends BaseSchema<Map<String, Object>> {
                 BaseSchema<?> schema = entry.getValue();
                 Object value = map.get(key);
 
-                if (value == null || !map.containsKey(key) || !isValidWithSchema(schema, value)) {
+                if (!isValidWithSchema(schema, value)) {
                     return false;
                 }
             }
@@ -36,19 +33,13 @@ public final class MapSchema extends BaseSchema<Map<String, Object>> {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     private <T> boolean isValidWithSchema(BaseSchema<T> schema, Object value) {
-        if (value == null) {
-            return true;
-        }
         try {
-            return schema.isValid((T) value);
+            @SuppressWarnings("unchecked")
+            T castedValue = (T) value;
+            return schema.isValid(castedValue);
         } catch (ClassCastException e) {
             return false;
         }
-    }
-
-    public int getRequiredSize() {
-        return requiredSize;
     }
 }
