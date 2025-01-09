@@ -25,7 +25,7 @@ public class MapSchemaTest {
     void testSizeOf() {
         Validator v = new Validator();
         MapSchema schema = v.map();
-        schema.required().sizeOf(2);
+        schema.required().sizeof(2);
 
         assertTrue(schema.isValid(Map.of("key1", 1, "key2", 2)));
         assertFalse(schema.isValid(Map.of("key1", 1)));
