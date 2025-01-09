@@ -13,13 +13,13 @@ public final class MapSchema extends BaseSchema<Map<?, ?>> {
         return this;
     }
 
-    public MapSchema shape(Map<String, BaseSchema<?>> schemas) {
+    public MapSchema shape(Map<String, ? extends BaseSchema<?>> schemas) {
         addCheck("shape", map -> {
             if (map == null) {
                 return false;
             }
 
-            for (Map.Entry<String, BaseSchema<?>> entry : schemas.entrySet()) {
+            for (Map.Entry<String, ? extends BaseSchema<?>> entry : schemas.entrySet()) {
                 String key = entry.getKey();
                 BaseSchema<?> schema = entry.getValue();
                 Object value = map.get(key);
