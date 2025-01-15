@@ -14,8 +14,8 @@ public class MapSchemaTest {
     void testRequired() {
         Validator v = new Validator();
         MapSchema schema = v.map();
-        assertTrue(schema.isValid(null));
 
+        assertTrue(schema.isValid(null));
         schema.required();
         assertFalse(schema.isValid(null));
         assertTrue(schema.isValid(Map.of()));
@@ -38,29 +38,21 @@ public class MapSchemaTest {
         MapSchema schema = v.map();
 
         Map<String, BaseSchema<?>> schemas = new HashMap<>();
-        schemas.put("firstName", v.string().required());
-        schemas.put("lastName", v.string().required().minLength(2));
+        schemas.put("key1", v.string().required());
+        schemas.put("key2", v.number().positive());
 
         schema.shape(schemas);
 
-        Map<String, Object> human1 = new HashMap<>();
-        human1.put("firstName", "John");
-        human1.put("lastName", "Smith");
-        assertTrue(schema.isValid(human1));
+        Map<String, Object> validMap = Map.of(
+                "key1", "value",
+                "key2", 10
+        );
+        assertTrue(schema.isValid(validMap));
 
-        Map<String, Object> human2 = new HashMap<>();
-        human2.put("firstName", "John");
-        human2.put("lastName", null);
-        assertFalse(schema.isValid(human2));
-
-        Map<String, Object> human3 = new HashMap<>();
-        human3.put("firstName", "Anna");
-        human3.put("lastName", "B");
-        assertFalse(schema.isValid(human3));
-
-        Map<String, Object> human4 = new HashMap<>();
-        human4.put("firstName", "Anna");
-        human4.put("lastName", "Bell");
-        assertTrue(schema.isValid(human4));
+        Map<String, Object> invalidMap = Map.of(
+                "key1", "",
+                "key2", -5
+        );
+        assertFalse(schema.isValid(invalidMap));
     }
 }

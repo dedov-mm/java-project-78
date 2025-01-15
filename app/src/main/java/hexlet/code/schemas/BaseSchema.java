@@ -5,16 +5,24 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 public abstract class BaseSchema<T> {
-    private final Map<String, Predicate<T>> checks = new LinkedHashMap<>();
+    private final Map<String, Predicate<? super T>> checks = new LinkedHashMap<>();
 
-    public final BaseSchema<T> addCheck(String name, Predicate<T> check) {
+    public final BaseSchema<T> addCheck(String name, Predicate<? super T> check) {
         checks.put(name, check);
         return this;
     }
 
-    public final boolean isValid(T value) {
-        for (Predicate<T> check : checks.values()) {
-            if (!check.test(value)) {
+    @SuppressWarnings("unchecked")
+    public final boolean isValid(Object value) {
+        T castedValue;
+        try {
+            castedValue = (T) value;
+        } catch (ClassCastException e) {
+            return false;
+        }
+
+        for (Predicate<? super T> check : checks.values()) {
+            if (!check.test(castedValue)) {
                 return false;
             }
         }
