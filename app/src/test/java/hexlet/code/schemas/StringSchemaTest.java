@@ -3,7 +3,6 @@ package hexlet.code.schemas;
 import hexlet.code.Validator;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -22,10 +21,8 @@ public class StringSchemaTest {
         StringSchema schema = new StringSchema();
         schema.minLength(5);
 
-        var expected = 5;
-        var actual = schema.getMinLength();
-
-        assertEquals(expected, actual);
+        assertFalse(schema.isValid("test"));
+        assertTrue(schema.isValid("testing"));
     }
 
     @Test
@@ -33,10 +30,8 @@ public class StringSchemaTest {
         StringSchema schema = new StringSchema();
         schema.contains("test");
 
-        var expected = "test";
-        var actual = schema.getContainsSubstring();
-
-        assertEquals(expected, actual);
+        assertTrue(schema.isValid("new test"));
+        assertFalse(schema.isValid("wrong value"));
     }
 
     @Test
