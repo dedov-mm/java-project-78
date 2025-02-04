@@ -22,7 +22,7 @@ public final class MapSchema extends BaseSchema<Map<?, ?>> {
             Map<?, ?> castedMap = (Map<?, ?>) map;
             for (Map.Entry<String, ? extends BaseSchema<?>> entry : schemas.entrySet()) {
                 String key = entry.getKey();
-                BaseSchema<?> schema = entry.getValue();
+                BaseSchema<Object> schema = (BaseSchema<Object>) entry.getValue();
                 Object value = castedMap.get(key);
 
                 if (!schema.isValid(value)) {

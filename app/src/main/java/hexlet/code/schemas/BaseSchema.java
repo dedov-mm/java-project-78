@@ -12,17 +12,9 @@ public abstract class BaseSchema<T> {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
-    public final boolean isValid(Object value) {
-        T castedValue;
-        try {
-            castedValue = (T) value;
-        } catch (ClassCastException e) {
-            return false;
-        }
-
+    public final boolean isValid(T value) {
         for (Predicate<? super T> check : checks.values()) {
-            if (!check.test(castedValue)) {
+            if (!check.test(value)) {
                 return false;
             }
         }
